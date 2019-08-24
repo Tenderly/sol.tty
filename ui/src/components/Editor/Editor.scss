@@ -24,37 +24,42 @@
       }
     }
 
-    .submit-btn {
-      font-size: 16px;
-      font-family: "Fira Code", monospace;
-      background-color: #118AB2;
-      color: white;
-      padding: 5px 12px;
-      border: none;
-      border-radius: 2px;
-      cursor: pointer;
-      transition: 0.2s;
+    .actions {
       display: flex;
-      align-items: center;
 
-      .icon {
-        margin-right: 5px;
-        opacity: 0.75;
-      }
+      .submit-btn, .unlock-btn {
+        font-size: 16px;
+        font-family: "Fira Code", monospace;
+        background-color: #118AB2;
+        color: white;
+        padding: 5px 12px;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        margin-left: 25px;
 
-      &:hover {
-        background-color: darken(#118AB2, 3);
-      }
+        .icon {
+          margin-right: 5px;
+          opacity: 0.75;
+        }
 
-      &:active, &:focus {
-        background-color: darken(#118AB2, 5);
-        box-shadow: 0 0 0 2px transparentize(#118AB2, 0.75);
-        outline: none;
-      }
+        &:hover {
+          background-color: darken(#118AB2, 3);
+        }
 
-      &.disabled, &[disabled], &:disabled {
-        background-color: #535353;
-        opacity: 0.5;
+        &:active, &:focus {
+          background-color: darken(#118AB2, 5);
+          box-shadow: 0 0 0 2px transparentize(#118AB2, 0.75);
+          outline: none;
+        }
+
+        &.disabled, &[disabled], &:disabled {
+          background-color: #535353;
+          opacity: 0.5;
+        }
       }
     }
   }

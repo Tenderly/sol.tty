@@ -6,7 +6,8 @@ import "brace/theme/dracula";
 
 import "./Editor.scss";
 import {FiPlayCircle} from "react-icons/fi";
-import Compiler from "../../services/Compiler/Compiler";
+import {FaKey} from "react-icons/all";
+import Compiler from "../../services/Compiler";
 
 export class Editor extends Component {
   constructor(props) {
@@ -47,6 +48,7 @@ contract Eval {
 
   render() {
     const {code} = this.state;
+    const {unlocked} = this.props;
 
     return (
       <div className="editor">
@@ -54,10 +56,16 @@ contract Eval {
           <div className="heading">
             <span>sol.tty</span>
           </div>
-          <button className="submit-btn" onClick={this.handleCompile}>
-            <FiPlayCircle className="icon"/>
-            <span>Compile</span>
-          </button>
+          <div className="actions">
+            <button className="submit-btn" onClick={this.handleCompile}>
+              <FiPlayCircle className="icon"/>
+              <span>Compile</span>
+            </button>
+            {!unlocked && <button className="unlock-btn" onClick={this.props.handleUnlock}>
+              <FaKey className="icon"/>
+              <span>Unlock MetaMask</span>
+            </button>}
+          </div>
         </div>
         <AceEditor
           mode="solidity"
