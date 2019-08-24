@@ -24,6 +24,9 @@ export default class Web3 {
         }
 
         account = accounts[0];
+        web3.eth.defaultAccount = account;
+
+        return web3;
       } catch (error) {
         alert(`User rejected access to MetaMask accounts: ${error}`);
       }

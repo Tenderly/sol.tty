@@ -1,15 +1,12 @@
 import React, {Component} from "react";
 import TextField from "@material-ui/core/TextField";
+import Button from "../Button/Button";
 
 import "./Runner.scss";
 
 export default class Runner extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      identityAddress: "0x06480c93a7acc5769f63f2af20a82069edc2312d",
-    };
   }
 
   handleChange = (field) => {
@@ -19,8 +16,7 @@ export default class Runner extends Component {
   };
 
   render() {
-    const {identityAddress} = this.state;
-    const {compilationResult} = this.props;
+    const {compilationResult, unlocked, identityAddress, deployIdentity} = this.props;
 
     return (
       <div className='runner'>
@@ -31,14 +27,21 @@ export default class Runner extends Component {
               </pre>;
           })}
         </div>}
-        <TextField
-          label="Identity contract address"
-          className="text-field"
-          type="text"
-          margin="normal"
-          onChange={this.handleChange('identityAddress')}
-          value={identityAddress}
-        />
+        <div className="identity-info">
+          {unlocked && identityAddress.length > 0 &&
+          <TextField
+            label="Identity contract address"
+            className="text-field"
+            type="text"
+            margin="normal"
+            disabled
+            onChange={() => {
+            }}
+            value={identityAddress}
+          />}
+          {unlocked && identityAddress.length === 0 &&
+          <Button icon="contract" text="Deploy identity contract" onClick={deployIdentity}/>}
+        </div>
       </div>
     );
   }

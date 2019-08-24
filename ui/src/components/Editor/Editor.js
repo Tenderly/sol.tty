@@ -4,9 +4,9 @@ import AceEditor from "react-ace";
 import "ace-mode-solidity/build/remix-ide/mode-solidity";
 import "brace/theme/dracula";
 
+import Button from "../Button/Button";
+
 import "./Editor.scss";
-import {FiPlayCircle} from "react-icons/fi";
-import {FaKey} from "react-icons/all";
 import Compiler from "../../services/Compiler";
 
 export class Editor extends Component {
@@ -57,14 +57,8 @@ contract Eval {
             <span>sol.tty</span>
           </div>
           <div className="actions">
-            <button className="submit-btn" onClick={this.handleCompile}>
-              <FiPlayCircle className="icon"/>
-              <span>Compile</span>
-            </button>
-            {!unlocked && <button className="unlock-btn" onClick={this.props.handleUnlock}>
-              <FaKey className="icon"/>
-              <span>Unlock MetaMask</span>
-            </button>}
+            <Button text="Compile" icon="circle" onClick={this.handleCompile}/>
+            {!unlocked && <Button text="Unlock MetaMask" icon="key" onClick={this.props.handleUnlock} className="unlock-btn"/>}
           </div>
         </div>
         <AceEditor
