@@ -5,7 +5,6 @@ const abi = [
     "constant": true,
     "inputs": [
       {
-        "internalType": "address",
         "name": "",
         "type": "address"
       }
@@ -13,7 +12,6 @@ const abi = [
     "name": "evals",
     "outputs": [
       {
-        "internalType": "address",
         "name": "",
         "type": "address"
       }
@@ -33,7 +31,7 @@ const abi = [
   }
 ];
 
-const address = "0x731a62c7BcDE7597F07Cf73f14279DaaA18e9f9D";
+const address = "0xF326a8199a1314e68973e0021E4a939888c28bb7";
 
 export default class EvaluatorFactory {
   static async getInstance() {

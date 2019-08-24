@@ -18,21 +18,25 @@ export class Editor extends Component {
 
 contract Eval {
  
-    function() external {
+    function evaluate() external {
         // @TODO: Add code here
     }
  
 }`,
+      loaded: false,
     };
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     const script = document.createElement("script");
 
     script.src = "//solc-bin.ethereum.org/bin/soljson-v0.5.11+commit.c082d0b4.js";
+    script.onload = () => {
+      this.setState({loaded: true});
+    };
 
     document.body.appendChild(script);
-  }
+  };
 
   handleChange = (value) => {
     this.setState({code: value});
@@ -47,7 +51,7 @@ contract Eval {
   };
 
   render() {
-    const {code} = this.state;
+    const {code, loaded} = this.state;
     const {unlocked} = this.props;
 
     return (
@@ -58,10 +62,12 @@ contract Eval {
           </div>
           <div className="actions">
             <Button text="Compile" icon="circle" onClick={this.handleCompile}/>
-            {!unlocked && <Button text="Unlock MetaMask" icon="key" onClick={this.props.handleUnlock} className="unlock-btn"/>}
+            {!unlocked &&
+            <Button text="Unlock MetaMask" icon="key" onClick={this.props.handleUnlock} className="unlock-btn"/>}
           </div>
         </div>
         <AceEditor
+          readOnly={!loaded}
           mode="solidity"
           theme="dracula"
           fontSize={14}

@@ -28,6 +28,17 @@ export default class Compiler {
     const errors = result.errors ? result.errors : [];
     delete result.errors;
 
+    // result.contracts["Eval.sol"]["Eval"].evm.methodIdentifiers
+    if (errors.length === 0) {
+      const contract = result.contracts["Eval.sol"];
+
+      if (!contract["Eval"]) {
+        errors.push({formattedMessage: "Eval contract not found"});
+      } else if (contract["Eval"].evm.methodIdentifiers["evaluate()"] !== "7daa9efc") {
+        errors.push({formattedMessage: "Eval.evaluate() function not found"});
+      }
+    }
+
     return {result, errors};
   }
 }

@@ -1,5 +1,17 @@
 pragma solidity >=0.4.21 <0.6.0;
 
+contract EvalFactory {
+    mapping(address => address) public evals;
+
+    function deploy() public {
+        require(evals[msg.sender] == address(0), "Contract already instantiated");
+
+        Eval newEvaluator = new Eval(msg.sender);
+
+        evals[msg.sender] = address(newEvaluator);
+    }
+}
+
 contract Eval {
     event Log(uint256 statuscode);
 
@@ -14,6 +26,12 @@ contract Eval {
         uint256 pc;
 
         Stack stack;
+    }
+
+    address owner;
+
+    constructor(address _owner) public {
+        owner = _owner;
     }
 
     function eval(bytes memory code, bytes memory data) public returns (bytes32) {
