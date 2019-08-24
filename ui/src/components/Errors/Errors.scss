@@ -1,0 +1,15 @@
+.errors {
+  overflow-x: scroll;
+  &.open {
+    height: 100%;
+    width: 800px;
+    padding: 25px;
+    transition: width 0.5s;
+  }
+
+  .compiler-errors {
+    padding: 20px;
+    color: red;
+    text-align: left;
+  }
+}

@@ -16,7 +16,7 @@ export default class Runner extends Component {
   };
 
   render() {
-    const {compilationResult, unlocked, identityAddress, deployIdentity} = this.props;
+    const {compilationResult, unlocked, identityAddress, deployIdentity, runSnippet} = this.props;
 
     return (
       <div className='runner'>
@@ -41,11 +41,10 @@ export default class Runner extends Component {
           />}
           {unlocked && identityAddress.length === 0 &&
           <Button icon="contract" text="Deploy identity contract" onClick={deployIdentity}/>}
-          {unlocked && identityAddress.length > 0 &&
-            <div className="actions">
-
-            </div>
-          }
+          {unlocked && identityAddress.length > 0 && compilationResult.errors.length === 0 &&
+          <div className="actions">
+            <Button icon="bolt" text="Run snippet" onClick={runSnippet}/>
+          </div>}
         </div>
       </div>
     );

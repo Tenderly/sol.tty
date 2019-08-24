@@ -31,7 +31,7 @@ const abi = [
   }
 ];
 
-const address = "0x54517690F7D0567a9034b4f73d322716a24a51F0";
+const address = "0x1104808a1af3831C4b954BFd25841E8ab05C609D";
 
 export default class EvaluatorFactory {
   static async getInstance() {

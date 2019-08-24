@@ -67,19 +67,23 @@ contract Eval {
 
   render() {
     const {code, loaded, snippetsOpen} = this.state;
-    const {unlocked} = this.props;
+    const {compilationResult, unlocked, identityAddress, deployIdentity, runSnippet} = this.props;
 
     return (
-      <div className="editor">
+      <div className={`editor ${compilationResult.errors.length > 0 ? 'has-errors' : ''}`}>
         <div className="editor-header">
           <div className="heading">
-            <span>sol.tty</span>
+            <span>sol.tty{identityAddress.length > 0 ? `(${identityAddress})` : ''}</span>
           </div>
           <div className="actions">
             <Button text="Compile" icon="circle" onClick={this.handleCompile}/>
             {!unlocked &&
             <Button text="Unlock MetaMask" icon="key" onClick={this.props.handleUnlock} className="margin-btn"/>}
             {unlocked && <Button icon="code" onClick={this.handleSnippetsOpen} text="Snippets" className="margin-btn"/>}
+            {unlocked && identityAddress.length === 0 &&
+            <Button icon="contract" text="Deploy identity contract" className="margin-btn" onClick={deployIdentity}/>}
+            {unlocked && identityAddress.length > 0 && compilationResult.errors.length === 0 &&
+            <Button icon="bolt" text="Run snippet" onClick={runSnippet} className="margin-btn"/>}
           </div>
         </div>
         <AceEditor

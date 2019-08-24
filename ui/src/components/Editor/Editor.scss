@@ -1,8 +1,12 @@
 .editor {
-  position: absolute;
   height: 100%;
-  width: 50%;
+  width: 100%;
   background-color: #282a35;
+  transition: width 0.5s;
+
+  &.has-errors {
+    width: calc(100% - 800px);
+  }
 
   .editor-header {
     padding: 10px 15px;
