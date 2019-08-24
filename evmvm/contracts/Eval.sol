@@ -42,10 +42,10 @@ contract Eval {
 
         while (true) {
             uint8 op = vmOp(vm);
-            //            if (vm.pc == 503) {
-            //                stackPop(vm.stack);
+            //            if (vm.pc == 73) {
+            //                                                stackPop(vm.stack);
             //                return stackPop(vm.stack);
-            //                return bytes32(int256(op));
+            //                return bytes32(uint256(op));
             //            }
 
             if (op == 0x00) {
@@ -280,7 +280,7 @@ contract Eval {
             revert(appendUintToString("Invalid opcode at PC: ", vm.pc));
         }
 
-        return stackPop(vm.stack);
+        return bytes32(uint256(0x0));
     }
 
     function opAdd(VM memory vm) private pure {
@@ -423,10 +423,7 @@ contract Eval {
         uint256 a = uint256(stackPop(vm.stack));
         uint256 b = uint256(stackPop(vm.stack));
 
-        uint256 res;
-        assembly {res := shl(a, b)}
-
-        stackPush(vm.stack, bytes32(res));
+        stackPush(vm.stack, bytes32(b << a));
 
         vm.pc++;
     }
@@ -435,10 +432,7 @@ contract Eval {
         uint256 a = uint256(stackPop(vm.stack));
         uint256 b = uint256(stackPop(vm.stack));
 
-        uint256 res;
-        assembly {res := shr(a, b)}
-
-        stackPush(vm.stack, bytes32(res));
+        stackPush(vm.stack, bytes32(b >> a));
 
         vm.pc++;
     }
@@ -456,7 +450,7 @@ contract Eval {
     }
 
     function opSha3(VM memory vm) private pure {
-        uint256 offset = uint256(stackPop(vm.stack));
+        uint256 offset = uint256(stackPop(vm.stack)) + 0x10000;
         uint256 length = uint256(stackPop(vm.stack));
 
         uint256 res;
@@ -525,7 +519,7 @@ contract Eval {
     }
 
     function opMLoad(VM memory vm) private pure {
-        uint256 offset = uint256(stackPop(vm.stack));
+        uint256 offset = uint256(stackPop(vm.stack)) + 0x10000;
 
         uint256 ret;
         assembly {
@@ -537,11 +531,11 @@ contract Eval {
     }
 
     function opMStore(VM memory vm) private pure {
-        uint256 offset = uint256(stackPop(vm.stack));
-        uint256 value = uint256(stackPop(vm.stack));
+        uint256 offsetVal = uint256(stackPop(vm.stack)) + 0x10000;
+        uint256 valueVal = uint256(stackPop(vm.stack));
 
         assembly {
-            mstore(offset, value)
+            mstore(offsetVal, valueVal)
         }
 
         vm.pc++;
@@ -615,7 +609,7 @@ contract Eval {
 
     function opCreate(VM memory vm) private {
         uint256 value = uint256(stackPop(vm.stack));
-        uint256 offset = uint256(stackPop(vm.stack));
+        uint256 offset = uint256(stackPop(vm.stack)) + 0x10000;
         uint256 length = uint256(stackPop(vm.stack));
 
         //@TODO: Test this.
@@ -631,9 +625,9 @@ contract Eval {
         uint256 gasVal = uint256(stackPop(vm.stack));
         uint256 addrVal = uint256(stackPop(vm.stack)) << 96;
         uint256 valueVal = uint256(stackPop(vm.stack));
-        uint256 argsOffsetVal = uint256(stackPop(vm.stack));
+        uint256 argsOffsetVal = uint256(stackPop(vm.stack)) + 0x10000;
         uint256 argsLengthVal = uint256(stackPop(vm.stack));
-        uint256 retOffsetVal = uint256(stackPop(vm.stack));
+        uint256 retOffsetVal = uint256(stackPop(vm.stack)) + 0x10000;
         uint256 retLengthVal = uint256(stackPop(vm.stack));
 
         bool success;
@@ -648,9 +642,9 @@ contract Eval {
         uint256 gasVal = uint256(stackPop(vm.stack));
         uint256 addrVal = uint256(stackPop(vm.stack)) << 96;
         uint256 valueVal = uint256(stackPop(vm.stack));
-        uint256 argsOffsetVal = uint256(stackPop(vm.stack));
+        uint256 argsOffsetVal = uint256(stackPop(vm.stack)) + 0x10000;
         uint256 argsLengthVal = uint256(stackPop(vm.stack));
-        uint256 retOffsetVal = uint256(stackPop(vm.stack));
+        uint256 retOffsetVal = uint256(stackPop(vm.stack)) + 0x10000;
         uint256 retLengthVal = uint256(stackPop(vm.stack));
 
         bool success;
@@ -662,20 +656,18 @@ contract Eval {
     }
 
     function opReturn(VM memory vm) private pure {
-        uint256 offset = uint256(stackPop(vm.stack));
+        uint256 offset = uint256(stackPop(vm.stack)) + 0x10000;
         uint256 length = uint256(stackPop(vm.stack));
 
         assembly {return (offset, length)}
-
-        vm.pc++;
     }
 
     function opDelegateCall(VM memory vm) private {
         uint256 gasVal = uint256(stackPop(vm.stack));
         uint256 addrVal = uint256(stackPop(vm.stack)) << 96;
-        uint256 argsOffsetVal = uint256(stackPop(vm.stack));
+        uint256 argsOffsetVal = uint256(stackPop(vm.stack)) + 0x10000;
         uint256 argsLengthVal = uint256(stackPop(vm.stack));
-        uint256 retOffsetVal = uint256(stackPop(vm.stack));
+        uint256 retOffsetVal = uint256(stackPop(vm.stack)) + 0x10000;
         uint256 retLengthVal = uint256(stackPop(vm.stack));
 
         bool success;
@@ -689,9 +681,9 @@ contract Eval {
     function opStaticCall(VM memory vm) private view {
         uint256 gasVal = uint256(stackPop(vm.stack));
         uint256 addrVal = uint256(stackPop(vm.stack)) << 96;
-        uint256 argsOffsetVal = uint256(stackPop(vm.stack));
+        uint256 argsOffsetVal = uint256(stackPop(vm.stack)) + 0x10000;
         uint256 argsLengthVal = uint256(stackPop(vm.stack));
-        uint256 retOffsetVal = uint256(stackPop(vm.stack));
+        uint256 retOffsetVal = uint256(stackPop(vm.stack)) + 0x10000;
         uint256 retLengthVal = uint256(stackPop(vm.stack));
 
         bool success;
@@ -703,7 +695,7 @@ contract Eval {
     }
 
     function opRevert(VM memory vm) private pure {
-        uint256 offset = uint256(stackPop(vm.stack));
+        uint256 offset = uint256(stackPop(vm.stack)) + 0x10000;
         uint256 length = uint256(stackPop(vm.stack));
 
         assembly {revert(offset, length)}
