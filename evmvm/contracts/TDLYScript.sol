@@ -4,7 +4,7 @@ import "./TDLY.sol";
 
 contract TDLYScript {
     function eval() public {
-        TDLY tdly = TDLY(0x4ce92dbEF7Af4E7f834B6FFA33699B601657A429);
+        TDLY tdly = TDLY(0xc97C0D39cA20366E2C01069F2ABfDD50EF0394ca);
 
         tdly.addAllowance(address(this));
         tdly.transfer(0xFB38cb88D96276d9fB4Fed67c1C9839B3d822B1b, 1);
