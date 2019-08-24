@@ -18,6 +18,7 @@ class App extends Component {
   }
 
   handleCompile = (compilationResult) => {
+    console.log(compilationResult);
     this.setState({compilationResult});
   };
 
