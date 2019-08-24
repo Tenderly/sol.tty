@@ -8,6 +8,7 @@ import Button from "../Button/Button";
 
 import "./Editor.scss";
 import Compiler from "../../services/Compiler";
+import Snippets from "../Snippets/Snippets";
 
 export class Editor extends Component {
   constructor(props) {
@@ -24,6 +25,7 @@ contract Eval {
  
 }`,
       loaded: false,
+      snippetsOpen: false,
     };
   }
 
@@ -50,8 +52,21 @@ contract Eval {
     this.props.handleCompile(result);
   };
 
+  handleSnippetsOpen = (event) => {
+    event.preventDefault();
+    this.setState({snippetsOpen: true});
+  };
+
+  handleSnippetsClose = (event) => {
+    this.setState({snippetsOpen: false});
+  };
+
+  handlePick = (code) => {
+    this.setState({code});
+  };
+
   render() {
-    const {code, loaded} = this.state;
+    const {code, loaded, snippetsOpen} = this.state;
     const {unlocked} = this.props;
 
     return (
@@ -63,7 +78,8 @@ contract Eval {
           <div className="actions">
             <Button text="Compile" icon="circle" onClick={this.handleCompile}/>
             {!unlocked &&
-            <Button text="Unlock MetaMask" icon="key" onClick={this.props.handleUnlock} className="unlock-btn"/>}
+            <Button text="Unlock MetaMask" icon="key" onClick={this.props.handleUnlock} className="margin-btn"/>}
+            {unlocked && <Button icon="code" onClick={this.handleSnippetsOpen} text="Snippets" className="margin-btn"/>}
           </div>
         </div>
         <AceEditor
@@ -85,6 +101,7 @@ contract Eval {
             tabSize: 4,
           }}
         />
+        <Snippets open={snippetsOpen} handleClose={this.handleSnippetsClose} handlePick={this.handlePick}/>
       </div>
     );
   }
