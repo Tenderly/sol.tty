@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "test": "truffle test"
+  },
+  "dependencies": {
+    "truffle-hdwallet-provider": "^1.0.0-web3one.5"
+  }
+}
