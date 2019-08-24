@@ -7,6 +7,7 @@ import Runner from "./components/Runner/Runner";
 function App() {
   return (
     <div className="App">
+
       <Editor/>
       <Runner/>
 
