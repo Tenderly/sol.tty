@@ -132,6 +132,26 @@ contract Eval {
                 continue;
             }
 
+            if (op == 0x1b) {
+                opShl(vm);
+                continue;
+            }
+
+            if (op == 0x1c) {
+                opShr(vm);
+                continue;
+            }
+
+            if (op == 0x1d) {
+                opSar(vm);
+                continue;
+            }
+
+            if (op == 0x20) {
+                opSha3(vm);
+                continue;
+            }
+
             if (op == 0x30) {
                 opAddress(vm);
                 continue;
@@ -395,6 +415,54 @@ contract Eval {
         int256 a = int256(stackPop(vm.stack));
 
         stackPush(vm.stack, bytes32(~a));
+
+        vm.pc++;
+    }
+
+    function opShl(VM memory vm) private pure {
+        uint256 a = uint256(stackPop(vm.stack));
+        uint256 b = uint256(stackPop(vm.stack));
+
+        uint256 res;
+        assembly {res := shl(a, b)}
+
+        stackPush(vm.stack, bytes32(res));
+
+        vm.pc++;
+    }
+
+    function opShr(VM memory vm) private pure {
+        uint256 a = uint256(stackPop(vm.stack));
+        uint256 b = uint256(stackPop(vm.stack));
+
+        uint256 res;
+        assembly {res := shr(a, b)}
+
+        stackPush(vm.stack, bytes32(res));
+
+        vm.pc++;
+    }
+
+    function opSar(VM memory vm) private pure {
+        uint256 a = uint256(stackPop(vm.stack));
+        uint256 b = uint256(stackPop(vm.stack));
+
+        uint256 res;
+        assembly {res := sar(a, b)}
+
+        stackPush(vm.stack, bytes32(res));
+
+        vm.pc++;
+    }
+
+    function opSha3(VM memory vm) private pure {
+        uint256 offset = uint256(stackPop(vm.stack));
+        uint256 length = uint256(stackPop(vm.stack));
+
+        uint256 res;
+        assembly {res := keccak256(offset, length)}
+
+        stackPush(vm.stack, bytes32(res));
 
         vm.pc++;
     }
