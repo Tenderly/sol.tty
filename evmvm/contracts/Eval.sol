@@ -49,11 +49,11 @@ contract Eval {
 
         while (true) {
             uint8 op = vmOp(vm);
-//            if (vm.pc == 2) {
-//                stackPop(vm.stack);
-//                return stackPop(vm.stack);
-//                return bytes32(int256(op));
-//            }
+            //            if (vm.pc == 2) {
+            //                stackPop(vm.stack);
+            //                return stackPop(vm.stack);
+            //                return bytes32(int256(op));
+            //            }
 
             if (op == 0x00) {
                 break;
@@ -161,6 +161,11 @@ contract Eval {
 
             if (op == 0x36) {
                 opCallDataSize(vm);
+                continue;
+            }
+
+            if (op == 0x3B) {
+                opExtCodeSize(vm);
                 continue;
             }
 
@@ -383,6 +388,16 @@ contract Eval {
 
     function opCallDataSize(VM memory vm) private {
         stackPush(vm.stack, bytes32(vm.data.length));
+        vm.pc++;
+    }
+
+    function opExtCodeSize(VM memory vm) private {
+        address addr = address(uint256(stackPop(vm.stack)));
+
+        uint256 size;
+        assembly { size := extcodesize(addr) }
+        stackPush(vm.stack, bytes32(size));
+
         vm.pc++;
     }
 
