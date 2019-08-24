@@ -29,7 +29,11 @@ contract Eval {
 
         while (true) {
             uint8 op = vmOp(vm);
-            emit Log(op);
+            // if (vm.pc == 72) {
+            // stackPop(vm.stack);
+            // return stackPop(vm.stack);
+            // return bytes32(int256(op));
+            // }
 
             if (op == 0x00) {
                 break;
@@ -40,8 +44,28 @@ contract Eval {
                 continue;
             }
 
+            if (op == 0x02) {
+                opMul(vm);
+                continue;
+            }
+
             if (op == 0x03) {
                 opSub(vm);
+                continue;
+            }
+
+            if (op == 0x04) {
+                opDiv(vm);
+                continue;
+            }
+
+            if (op == 0x05) {
+                opSdiv(vm);
+                continue;
+            }
+
+            if (op == 0x06) {
+                opMod(vm);
                 continue;
             }
 
@@ -95,29 +119,10 @@ contract Eval {
                 continue;
             }
 
-
             if (op == 0x34) {
                 opCallValue(vm);
                 continue;
             }
-
-            //            // BALANCE
-            //            if (op == 0x31) {
-            //                opBalance(vm);
-            //                continue;
-            //            }
-            //
-            //            // ORIGIN
-            //            if (op == 0x32) {
-            //                opOrigin(vm);
-            //                continue;
-            //            }
-            //
-            //            // CALLER
-            //            if (op == 0x33) {
-            //                opCaller(vm);
-            //                continue;
-            //            }
 
             if (op == 0x35) {
                 opCallDataLoad(vm);
@@ -177,7 +182,7 @@ contract Eval {
             revert(appendUintToString("Invalid opcode: ", op));
         }
 
-        //        return statusOk;
+        return statusOk;
         return stackPop(vm.stack);
     }
 
@@ -189,11 +194,43 @@ contract Eval {
         vm.pc++;
     }
 
+    function opMul(VM memory vm) private {
+        int256 b = int256(stackPop(vm.stack));
+        int256 a = int256(stackPop(vm.stack));
+
+        stackPush(vm.stack, bytes32(a * b));
+        vm.pc++;
+    }
+
     function opSub(VM memory vm) private {
         int256 a = int256(stackPop(vm.stack));
         int256 b = int256(stackPop(vm.stack));
 
         stackPush(vm.stack, bytes32(a - b));
+        vm.pc++;
+    }
+
+    function opDiv(VM memory vm) private {
+        uint256 a = uint256(stackPop(vm.stack));
+        uint256 b = uint256(stackPop(vm.stack));
+
+        stackPush(vm.stack, bytes32(uint256(a / b)));
+        vm.pc++;
+    }
+
+    function opSdiv(VM memory vm) private {
+        int256 a = int256(stackPop(vm.stack));
+        int256 b = int256(stackPop(vm.stack));
+
+        stackPush(vm.stack, bytes32(a / b));
+        vm.pc++;
+    }
+
+    function opMod(VM memory vm) private {
+        int256 a = int256(stackPop(vm.stack));
+        int256 b = int256(stackPop(vm.stack));
+
+        stackPush(vm.stack, bytes32(a % b));
         vm.pc++;
     }
 
@@ -293,7 +330,7 @@ contract Eval {
     function opCallDataLoad(VM memory vm) private {
         uint256 idx = uint256(stackPop(vm.stack));
 
-        stackPush(vm.stack, bytesToBytes32(vm.data, idx));
+        stackPush(vm.stack, bytes32(bytesToBytes322(vm.data, idx)));
 
         vm.pc++;
     }
@@ -402,11 +439,11 @@ contract Eval {
     }
 
     function stackSwap(Stack memory stack, uint8 idx1, uint8 idx2) private {
-        bytes32 a = stack.data[stack.height - idx1];
-        bytes32 b = stack.data[stack.height - idx2];
+        bytes32 a = stack.data[stack.height - 1 - idx1];
+        bytes32 b = stack.data[stack.height - 1 - idx2];
 
-        stack.data[idx1] = b;
-        stack.data[idx2] = a;
+        stack.data[stack.height - 1 - idx1] = b;
+        stack.data[stack.height - 1 - idx2] = a;
     }
 
     function stackPeek(Stack memory stack, uint8 idx) private returns (bytes32) {
@@ -430,6 +467,14 @@ contract Eval {
         }
 
         return out;
+    }
+
+    function bytesToBytes322(bytes memory data, uint offset) private pure returns (uint256) {
+        uint256 x;
+        assembly {
+            x := mload(add(data, add(0x20, offset)))
+        }
+        return x;
     }
 
 

@@ -16,8 +16,8 @@ contract("Eval", async accounts => {
 
         let instance = await Eval.deployed();
 
-        // const res = await instance.eval.call(code, signature);
-        const res = await instance.eval.sendTransaction(code, signature, {from: accounts[0]});
+        const res = await instance.eval.call(code, signature);
+        // const res = await instance.eval.sendTransaction(code, signature, {from: accounts[0]});
 
         console.log(res);
     })
