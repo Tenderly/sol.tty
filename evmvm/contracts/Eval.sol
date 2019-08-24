@@ -42,11 +42,11 @@ contract Eval {
 
         while (true) {
             uint8 op = vmOp(vm);
-            //            if (vm.pc == 73) {
-            //                                                stackPop(vm.stack);
-            //                return stackPop(vm.stack);
-            //                return bytes32(uint256(op));
-            //            }
+//            if (vm.pc == 151) {
+                //                                                stackPop(vm.stack);
+                //                return stackPop(vm.stack);
+//                return bytes32(uint256(op));
+//            }
 
             if (op == 0x00) {
                 break;
@@ -184,6 +184,11 @@ contract Eval {
 
             if (op == 0x3D) {
                 opReturnDataSize(vm);
+                continue;
+            }
+
+            if (op == 0x3E) {
+                opReturnDataCopy(vm);
                 continue;
             }
 
@@ -509,6 +514,16 @@ contract Eval {
         uint256 size;
         assembly {size := returndatasize()}
         stackPush(vm.stack, bytes32(size));
+
+        vm.pc++;
+    }
+
+    function opReturnDataCopy(VM memory vm) private pure {
+        uint256 destOffset = uint256(stackPop(vm.stack)) + 0x10000;
+        uint256 offset = uint256(stackPop(vm.stack));
+        uint256 length = uint256(stackPop(vm.stack));
+
+        assembly {returndatacopy(destOffset, offset, length)}
 
         vm.pc++;
     }
