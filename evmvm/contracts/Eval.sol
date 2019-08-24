@@ -49,11 +49,11 @@ contract Eval {
 
         while (true) {
             uint8 op = vmOp(vm);
-            // if (vm.pc == 72) {
-            // stackPop(vm.stack);
-            // return stackPop(vm.stack);
-            // return bytes32(int256(op));
-            // }
+//            if (vm.pc == 2) {
+//                stackPop(vm.stack);
+//                return stackPop(vm.stack);
+//                return bytes32(int256(op));
+//            }
 
             if (op == 0x00) {
                 break;
@@ -136,6 +136,16 @@ contract Eval {
 
             if (op == 0x19) {
                 opNot(vm);
+                continue;
+            }
+
+            if (op == 0x30) {
+                opAddress(vm);
+                continue;
+            }
+
+            if (op == 0x31) {
+                opBalance(vm);
                 continue;
             }
 
@@ -338,6 +348,22 @@ contract Eval {
         int256 a = int256(stackPop(vm.stack));
 
         stackPush(vm.stack, bytes32(~a));
+
+        vm.pc++;
+    }
+
+    function opAddress(VM memory vm) private {
+        // This will insert the proper bytes32 value to stack, but we will cheat a bit and try to not do any shifting.
+        // stackPush(vm.stack, bytes32(uint256(address(this)) << 96));
+        stackPush(vm.stack, bytes32(uint256(address(this))));
+
+        vm.pc++;
+    }
+
+    function opBalance(VM memory vm) private {
+        address addr = address(uint256(stackPop(vm.stack)));
+
+        stackPush(vm.stack, bytes32(addr.balance));
 
         vm.pc++;
     }

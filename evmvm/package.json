@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "test": "truffle test"
+    "test": "truffle test ./test/eval.js"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^2.3.0",
