@@ -24,7 +24,10 @@ export default class Compiler {
       }
     };
 
-    const compiled = JSON.parse(solc.compile(JSON.stringify(input)));
-    console.log(compiled);
+    const result = JSON.parse(solc.compile(JSON.stringify(input)));
+    const errors = result.errors ? result.errors : [];
+    delete result.errors;
+
+    return {result, errors};
   }
 }

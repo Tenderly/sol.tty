@@ -20,9 +20,17 @@ export default class Runner extends Component {
 
   render() {
     const {identityAddress} = this.state;
+    const {compilationResult} = this.props;
 
     return (
       <div className='runner'>
+        {compilationResult.errors.length > 0 && <div className="compiler-errors">
+          {compilationResult.errors.map((err, i) => {
+            return <pre key={i}>
+                {err.formattedMessage}
+              </pre>;
+          })}
+        </div>}
         <TextField
           label="Identity contract address"
           className="text-field"

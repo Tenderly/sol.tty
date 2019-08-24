@@ -29,7 +29,6 @@ contract Eval {
     const script = document.createElement("script");
 
     script.src = "//solc-bin.ethereum.org/bin/soljson-v0.5.11+commit.c082d0b4.js";
-    // script.async = true;
 
     document.body.appendChild(script);
   }
@@ -41,7 +40,9 @@ contract Eval {
   handleCompile = (event) => {
     event.preventDefault();
 
-    Compiler.compile(this.state.code);
+    const result = Compiler.compile(this.state.code);
+
+    this.props.handleCompile(result);
   };
 
   render() {

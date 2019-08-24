@@ -1,19 +1,38 @@
-import React from 'react';
+import React, {Component} from 'react';
 import './App.scss';
 import {Editor} from "./components/Editor/Editor";
 import Runner from "./components/Runner/Runner";
 
 
-function App() {
-  return (
-    <div className="App">
+class App extends Component {
+  constructor(props) {
+    super(props);
 
-      <Editor/>
-      <Runner/>
+    this.state = {
+      compilationResult: {
+        errors: [],
+      }
+    }
+  }
 
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"/>
-    </div>
-  );
+  handleCompile = (compilationResult) => {
+    console.log(compilationResult);
+    this.setState({compilationResult});
+  };
+
+  render() {
+    const {compilationResult} = this.state;
+    return (
+      <div className="App">
+
+        <Editor handleCompile={this.handleCompile}/>
+        <Runner compilationResult={compilationResult}/>
+
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"/>
+      </div>
+    );
+  }
+
 }
 
 export default App;
