@@ -41,6 +41,11 @@ export default class Runner extends Component {
           />}
           {unlocked && identityAddress.length === 0 &&
           <Button icon="contract" text="Deploy identity contract" onClick={deployIdentity}/>}
+          {unlocked && identityAddress.length > 0 &&
+            <div className="actions">
+
+            </div>
+          }
         </div>
       </div>
     );

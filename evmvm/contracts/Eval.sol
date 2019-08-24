@@ -1,5 +1,25 @@
 pragma solidity >=0.4.21 <0.6.0;
 
+contract EvalFactory {
+    mapping(address => address) public evals;
+
+    function deploy() public {
+        require(evals[msg.sender] == address(0), "Contract already instantiated");
+
+        Eval2 newEvaluator = new Eval2(msg.sender);
+
+        evals[msg.sender] = address(newEvaluator);
+    }
+}
+
+contract Eval2 {
+    address owner;
+
+    constructor(address _owner) public {
+        owner = _owner;
+    }
+}
+
 contract Eval {
     event Log(uint256 statuscode);
 
