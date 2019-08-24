@@ -6,9 +6,17 @@ contract EvalFactory {
     function deploy() public {
         require(evals[msg.sender] == address(0), "Contract already instantiated");
 
-        Eval newEvaluator = new Eval(msg.sender);
+        Eval2 newEvaluator = new Eval2(msg.sender);
 
         evals[msg.sender] = address(newEvaluator);
+    }
+}
+
+contract Eval2 {
+    address owner;
+
+    constructor(address _owner) public {
+        owner = _owner;
     }
 }
 
@@ -26,12 +34,6 @@ contract Eval {
         uint256 pc;
 
         Stack stack;
-    }
-
-    address owner;
-
-    constructor(address _owner) public {
-        owner = _owner;
     }
 
     function eval(bytes memory code, bytes memory data) public returns (bytes32) {
