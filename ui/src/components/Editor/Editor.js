@@ -11,7 +11,13 @@ export class Editor extends Component {
     super(props);
 
     this.state = {
-      code: "",
+      code: `contract Eval {
+ 
+    function() {
+        // @TODO: Add code here
+    }
+ 
+}`,
     };
   }
 
