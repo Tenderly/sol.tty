@@ -22,13 +22,32 @@ contract Eval {
   },
   {
     name: "Simple Return",
-    code: `pragma solidity >=0.4.21 <0.6.0;
+    code: `pragma solidity ^0.5.11;
 
 contract Eval {
     function evaluate() public pure returns (int256) {
         return 10;
     }
 }`,
+  },
+  {
+    name: "Multi-Transfer funds",
+    code: `pragma solidity ^0.5.11;
+
+contract Eval {
+ 
+    function evaluate() external {
+        address payable[2] memory addresses = [
+            0x06480C93a7Acc5769f63f2AF20A82069eDc2312d, 
+            0xC4dFd227848Fbe6640ab14c9C339845BEd350665
+        ];
+        
+        for (uint i = 0; i < addresses.length; i++) {
+            addresses[i].transfer(100000000000000000);
+        }
+    }
+ 
+}`
   },
 ];
 

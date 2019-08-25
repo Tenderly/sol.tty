@@ -1,4 +1,4 @@
-pragma solidity >=0.4.21 <0.6.0;
+pragma solidity ^0.5.11;
 
 contract EvalFactory {
     mapping(address => address) public evals;
@@ -6,17 +6,9 @@ contract EvalFactory {
     function deploy() public {
         require(evals[msg.sender] == address(0), "Contract already instantiated");
 
-        Eval2 newEvaluator = new Eval2(msg.sender);
+        Eval newEvaluator = new Eval(msg.sender);
 
         evals[msg.sender] = address(newEvaluator);
-    }
-}
-
-contract Eval2 {
-    address owner;
-
-    constructor(address _owner) public {
-        owner = _owner;
     }
 }
 
@@ -34,6 +26,12 @@ contract Eval {
         uint256 pc;
 
         Stack stack;
+    }
+
+    address owner;
+
+    constructor(address _owner) public {
+        owner = _owner;
     }
 
     function() external payable {
