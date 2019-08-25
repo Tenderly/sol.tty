@@ -1,5 +1,7 @@
 # sol.tty
 
+<a href="https://raw.githubusercontent.com/BencicAndrej/sol.tty/master/images/logo.jpg" target="_blank">![An example of a snippet](https://raw.githubusercontent.com/BencicAndrej/sol.tty/master/images/logo.jpg)</a>
+
 ## What it does
 
 The scripting layer Ethereum was missing. A Solidity implementation of the EVM deployed as an identity contract so you can run any Solidity code just like you could if you had a REPL.
