@@ -85,6 +85,27 @@ contract Eval {
                 continue;
             }
 
+            if (op == 0x07) {
+                opSMod(vm);
+                continue;
+            }
+            if (op == 0x08) {
+                opAddMod(vm);
+                continue;
+            }
+            if (op == 0x09) {
+                opMulMod(vm);
+                continue;
+            }
+            if (op == 0x0a) {
+                opExp(vm);
+                continue;
+            }
+            if (op == 0x0b) {
+                opSignExtend(vm);
+                continue;
+            }
+
             if (op == 0x10) {
                 opLt(vm);
                 continue;
@@ -135,6 +156,11 @@ contract Eval {
                 continue;
             }
 
+            if (op == 0x1a) {
+                opByte(vm);
+                continue;
+            }
+
             if (op == 0x1b) {
                 opShl(vm);
                 continue;
@@ -165,6 +191,15 @@ contract Eval {
                 continue;
             }
 
+            if (op == 0x32) {
+                opOrigin(vm);
+                continue;
+            }
+            if (op == 0x33) {
+                opCaller(vm);
+                continue;
+            }
+
             if (op == 0x34) {
                 opCallValue(vm);
                 continue;
@@ -180,6 +215,8 @@ contract Eval {
                 continue;
             }
 
+            //@TODO: 0x37 CALLDATACOPY
+
             if (op == 0x38) {
                 opCodeSize(vm);
                 continue;
@@ -190,10 +227,14 @@ contract Eval {
                 continue;
             }
 
+            //@TODO 0x3a GASPRICE
+
             if (op == 0x3B) {
                 opExtCodeSize(vm);
                 continue;
             }
+
+            //@TODO: 0x3c EXTCODECOPY
 
             if (op == 0x3D) {
                 opReturnDataSize(vm);
@@ -204,6 +245,13 @@ contract Eval {
                 opReturnDataCopy(vm);
                 continue;
             }
+
+            //            0x40	BLOCKHASH	Get the hash of one of the 256 most recent complete blocks	-	20
+            //        0x41	COINBASE	Get the block's beneficiary address	-	2
+            //        0x42	TIMESTAMP	Get the block's timestamp	-	2
+            //        0x43	NUMBER	Get the block's number	-	2
+            //        0x44	DIFFICULTY	Get the block's difficulty	-	2
+            //        0x45	GASLIMIT	Get the block's gas limit	-	2
 
             if (op == 0x50) {
                 opPop(vm);
@@ -220,6 +268,11 @@ contract Eval {
                 continue;
             }
 
+            //0x53	MSTORE8	Save byte to memory	-	3
+
+            //            0x54	SLOAD	Load word from storage	-	200
+            //        0x55	SSTORE	Save word to storage	-	20000**
+
             if (op == 0x56) {
                 opJump(vm);
                 continue;
@@ -229,6 +282,9 @@ contract Eval {
                 opJumpi(vm);
                 continue;
             }
+
+            //            0x58	GETPC	Get the value of the program counter prior to the increment	-	2
+            //        0x59	MSIZE	Get the size of active memory in bytes	-	2
 
             if (op == 0x5a) {
                 opGas(vm);
@@ -254,6 +310,12 @@ contract Eval {
                 opSwap(vm);
                 continue;
             }
+
+            //            0xa0	LOG0	Append log record with no topics	-	375
+            //        0xa1	LOG1	Append log record with one topic	-	750
+            //        0xa2	LOG2	Append log record with two topics	-	1125
+            //        0xa3	LOG3	Append log record with three topics	-	1500
+            //        0xa4	LOG4	Append log record with four topics	-	1875
 
             if (op == 0xF0) {
                 opCreate(vm);
@@ -342,10 +404,55 @@ contract Eval {
     }
 
     function opMod(VM memory vm) private pure {
+        uint256 a = uint256(stackPop(vm.stack));
+        uint256 b = uint256(stackPop(vm.stack));
+
+        stackPush(vm.stack, bytes32(a % b));
+        vm.pc++;
+    }
+
+    function opSMod(VM memory vm) private pure {
         int256 a = int256(stackPop(vm.stack));
         int256 b = int256(stackPop(vm.stack));
 
         stackPush(vm.stack, bytes32(a % b));
+        vm.pc++;
+    }
+
+    function opAddMod(VM memory vm) private pure {
+        int256 a = int256(stackPop(vm.stack));
+        int256 b = int256(stackPop(vm.stack));
+        int256 n = int256(stackPop(vm.stack));
+
+        stackPush(vm.stack, bytes32((a + b) % n));
+        vm.pc++;
+    }
+
+    function opMulMod(VM memory vm) private pure {
+        int256 a = int256(stackPop(vm.stack));
+        int256 b = int256(stackPop(vm.stack));
+        int256 n = int256(stackPop(vm.stack));
+
+        stackPush(vm.stack, bytes32((a * b) % n));
+        vm.pc++;
+    }
+
+    function opExp(VM memory vm) private pure {
+        uint256 a = uint256(stackPop(vm.stack));
+        uint256 b = uint256(stackPop(vm.stack));
+
+        stackPush(vm.stack, bytes32(a ** b));
+        vm.pc++;
+    }
+
+    function opSignExtend(VM memory vm) private pure {
+        int256 b = int256(stackPop(vm.stack));
+        int256 x = int256(stackPop(vm.stack));
+
+        int256 res;
+        assembly {res := signextend(x, b)}
+
+        stackPush(vm.stack, bytes32(res));
         vm.pc++;
     }
 
@@ -437,6 +544,15 @@ contract Eval {
         vm.pc++;
     }
 
+    function opByte(VM memory vm) private pure {
+        int256 i = int256(stackPop(vm.stack));
+        int256 x = int256(stackPop(vm.stack));
+
+        stackPush(vm.stack, bytes32((x >> (248 - i * 8)) & 0xFF));
+
+        vm.pc++;
+    }
+
     function opShl(VM memory vm) private pure {
         uint256 a = uint256(stackPop(vm.stack));
         uint256 b = uint256(stackPop(vm.stack));
@@ -491,6 +607,18 @@ contract Eval {
         address addr = address(uint256(stackPop(vm.stack)));
 
         stackPush(vm.stack, bytes32(addr.balance));
+
+        vm.pc++;
+    }
+
+    function opOrigin(VM memory vm) private view {
+        stackPush(vm.stack, bytes32(uint256(tx.origin)));
+
+        vm.pc++;
+    }
+
+    function opCaller(VM memory vm) private view {
+        stackPush(vm.stack, bytes32(uint256(msg.sender)));
 
         vm.pc++;
     }
