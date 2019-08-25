@@ -36,17 +36,20 @@ contract Eval {
         Stack stack;
     }
 
+    function() external payable {
+    }
+
     function eval(bytes memory code, bytes memory data) public payable returns (bytes32) {
         Stack memory stack;
         VM memory vm = VM(code, data, 0, stack);
 
         while (true) {
             uint8 op = vmOp(vm);
-//            if (vm.pc == 151) {
-                //                                                stackPop(vm.stack);
-                //                return stackPop(vm.stack);
-//                return bytes32(uint256(op));
-//            }
+            //                        if (vm.pc == 359) {
+            //                                                stackPop(vm.stack);
+            //                            return stackPop(vm.stack);
+            //                return bytes32(uint256(op));
+            //                        }
 
             if (op == 0x00) {
                 break;
@@ -174,6 +177,16 @@ contract Eval {
 
             if (op == 0x36) {
                 opCallDataSize(vm);
+                continue;
+            }
+
+            if (op == 0x38) {
+                opCodeSize(vm);
+                continue;
+            }
+
+            if (op == 0x39) {
+                opCodeCopy(vm);
                 continue;
             }
 
@@ -490,13 +503,36 @@ contract Eval {
     function opCallDataLoad(VM memory vm) private pure {
         uint256 idx = uint256(stackPop(vm.stack));
 
-        stackPush(vm.stack, bytes32(bytesToBytes322(vm.data, idx)));
+        stackPush(vm.stack, bytes32(bytesToBytes32(vm.data, idx)));
 
         vm.pc++;
     }
 
     function opCallDataSize(VM memory vm) private pure {
         stackPush(vm.stack, bytes32(vm.data.length));
+        vm.pc++;
+    }
+
+    function opCodeSize(VM memory vm) private pure {
+        stackPush(vm.stack, bytes32(vm.code.length));
+
+        vm.pc++;
+    }
+
+    function opCodeCopy(VM memory vm) private pure {
+        uint256 destOffset = uint256(stackPop(vm.stack)) + 0x10000;
+        uint256 offset = uint256(stackPop(vm.stack));
+        uint256 length = uint256(stackPop(vm.stack));
+
+        uint loops = (length + 31) / 32;
+        assembly{mstore(destOffset, length)}
+        for (uint i = 0; i < loops; i++) {
+            bytes32 data = bytes32(bytesToBytes32(vm.code, offset + i * 32));
+            assembly {
+                mstore(add(destOffset, mul(32, add(1, i))), data)
+            }
+        }
+
         vm.pc++;
     }
 
@@ -751,25 +787,7 @@ contract Eval {
     }
 
     // UTIL
-    function bytesToBytes32(uint _offst, bytes memory _input, bytes32 _output) internal pure {
-        assembly {
-            mstore(_output, add(_input, _offst))
-            mstore(add(_output, 32), add(add(_input, _offst), 32))
-        }
-    }
-
-    function bytesToBytes32(bytes memory data, uint offset) private pure returns (bytes32) {
-        bytes32 out;
-
-        assembly {
-            mstore(out, add(data, offset))
-            mstore(add(out, 32), add(add(data, offset), 32))
-        }
-
-        return out;
-    }
-
-    function bytesToBytes322(bytes memory data, uint offset) private pure returns (uint256) {
+    function bytesToBytes32(bytes memory data, uint offset) private pure returns (uint256) {
         uint256 x;
         assembly {
             x := mload(add(data, add(0x20, offset)))
