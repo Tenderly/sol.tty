@@ -35,7 +35,8 @@ There are a couple of steps involved in making this:
 * Some of the internals of the EVM itself
 
 ## Links
-[Devpost](https://devpost.com/software/sol-tty)
+* [Devpost](https://devpost.com/software/sol-tty)
+* [Deployed EvalFactory on Kovan](https://kovan.etherscan.io/address/0x9e487a842272bcff7d5b644681e185cca6fb974c#code)
 
 ## Demo
 
