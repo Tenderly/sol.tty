@@ -309,11 +309,30 @@ contract Eval {
                 continue;
             }
 
-            //            0xa0	LOG0	Append log record with no topics	-	375
-            //        0xa1	LOG1	Append log record with one topic	-	750
-            //        0xa2	LOG2	Append log record with two topics	-	1125
-            //        0xa3	LOG3	Append log record with three topics	-	1500
-            //        0xa4	LOG4	Append log record with four topics	-	1875
+            if (op == 0xa0) {
+                opLog0(vm);
+                continue;
+            }
+
+            if (op == 0xa1) {
+                opLog1(vm);
+                continue;
+            }
+
+            if (op == 0xa2) {
+                opLog2(vm);
+                continue;
+            }
+
+            if (op == 0xa3) {
+                opLog3(vm);
+                continue;
+            }
+
+            if (op == 0xa4) {
+                opLog4(vm);
+                continue;
+            }
 
             if (op == 0xF0) {
                 opCreate(vm);
@@ -780,6 +799,61 @@ contract Eval {
         uint8 idx = swapOp - 0x90 + 1;
 
         stackSwap(vm.stack, 0, idx);
+
+        vm.pc++;
+    }
+
+    function opLog0(VM memory vm) private {
+        uint256 dataOffset = uint256(stackPop(vm.stack));
+        uint256 dataSize = uint256(stackPop(vm.stack));
+
+        assembly { log0(dataOffset, dataSize) }
+
+        vm.pc++;
+    }
+
+    function opLog1(VM memory vm) private {
+        uint256 dataOffset = uint256(stackPop(vm.stack));
+        uint256 dataSize = uint256(stackPop(vm.stack));
+        bytes32 topic1 = stackPop(vm.stack);
+
+        assembly { log1(dataOffset, dataSize, topic1) }
+
+        vm.pc++;
+    }
+
+    function opLog2(VM memory vm) private {
+        uint256 dataOffset = uint256(stackPop(vm.stack));
+        uint256 dataSize = uint256(stackPop(vm.stack));
+        bytes32 topic1 = stackPop(vm.stack);
+        bytes32 topic2 = stackPop(vm.stack);
+
+        assembly { log2(dataOffset, dataSize, topic1, topic2) }
+
+        vm.pc++;
+    }
+
+    function opLog3(VM memory vm) private {
+        uint256 dataOffset = uint256(stackPop(vm.stack));
+        uint256 dataSize = uint256(stackPop(vm.stack));
+        bytes32 topic1 = stackPop(vm.stack);
+        bytes32 topic2 = stackPop(vm.stack);
+        bytes32 topic3 = stackPop(vm.stack);
+
+        assembly { log3(dataOffset, dataSize, topic1, topic2, topic3) }
+
+        vm.pc++;
+    }
+
+    function opLog4(VM memory vm) private {
+        uint256 dataOffset = uint256(stackPop(vm.stack));
+        uint256 dataSize = uint256(stackPop(vm.stack));
+        bytes32 topic1 = stackPop(vm.stack);
+        bytes32 topic2 = stackPop(vm.stack);
+        bytes32 topic3 = stackPop(vm.stack);
+        bytes32 topic4 = stackPop(vm.stack);
+
+        assembly { log4(dataOffset, dataSize, topic1, topic2, topic3, topic4) }
 
         vm.pc++;
     }
