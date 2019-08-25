@@ -27,10 +27,20 @@ contract("Eval", async accounts => {
 
         let instance = await Eval.deployed();
 
-        await instance.sendTransaction({value: 10000});
+        await instance.sendTransaction({ value: 10000 });
         const res = await instance.eval.call(code, signature);
 
         console.log(res);
+    });
+
+    describe("It should emit events", () => {
+        it("Should emit event with log0", async () => {
+            const instance = await Eval.new(accounts[0]);
+            // PUSH2 2321 PUSH1 00 MSTORE PUSH1 20 PUSH1 00 LOG0 PUSH 00 DUP RETURN
+            const code = "0x61232160005260206000a0600080f3";
+            const res = await instance.eval(code, "0x");
+            expect(res.receipt.rawLogs[0].data).to.be.equal("0x0000000000000000000000000000000000000000000000000000000000002321");
+        });
     });
 
     // it("processes with return", async () => {
