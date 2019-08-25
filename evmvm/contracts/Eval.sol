@@ -804,7 +804,7 @@ contract Eval {
     }
 
     function opLog0(VM memory vm) private {
-        uint256 dataOffset = uint256(stackPop(vm.stack));
+        uint256 dataOffset = uint256(stackPop(vm.stack)) + 0x10000;
         uint256 dataSize = uint256(stackPop(vm.stack));
 
         assembly { log0(dataOffset, dataSize) }
@@ -813,7 +813,7 @@ contract Eval {
     }
 
     function opLog1(VM memory vm) private {
-        uint256 dataOffset = uint256(stackPop(vm.stack));
+        uint256 dataOffset = uint256(stackPop(vm.stack)) + 0x10000;
         uint256 dataSize = uint256(stackPop(vm.stack));
         bytes32 topic1 = stackPop(vm.stack);
 
@@ -823,7 +823,7 @@ contract Eval {
     }
 
     function opLog2(VM memory vm) private {
-        uint256 dataOffset = uint256(stackPop(vm.stack));
+        uint256 dataOffset = uint256(stackPop(vm.stack)) + 0x10000;
         uint256 dataSize = uint256(stackPop(vm.stack));
         bytes32 topic1 = stackPop(vm.stack);
         bytes32 topic2 = stackPop(vm.stack);
@@ -834,7 +834,7 @@ contract Eval {
     }
 
     function opLog3(VM memory vm) private {
-        uint256 dataOffset = uint256(stackPop(vm.stack));
+        uint256 dataOffset = uint256(stackPop(vm.stack)) + 0x10000;
         uint256 dataSize = uint256(stackPop(vm.stack));
         bytes32 topic1 = stackPop(vm.stack);
         bytes32 topic2 = stackPop(vm.stack);
@@ -846,7 +846,7 @@ contract Eval {
     }
 
     function opLog4(VM memory vm) private {
-        uint256 dataOffset = uint256(stackPop(vm.stack));
+        uint256 dataOffset = uint256(stackPop(vm.stack)) + 0x10000;
         uint256 dataSize = uint256(stackPop(vm.stack));
         bytes32 topic1 = stackPop(vm.stack);
         bytes32 topic2 = stackPop(vm.stack);
