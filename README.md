@@ -1,5 +1,7 @@
 # sol.tty
 
+Made with ♥ by [Tenderly](https://tenderly.dev)
+
 <a href="https://raw.githubusercontent.com/BencicAndrej/sol.tty/master/images/logo.jpg" target="_blank">![An example of a snippet](https://raw.githubusercontent.com/BencicAndrej/sol.tty/master/images/logo.jpg)</a>
 
 ## What it does
