@@ -12,7 +12,7 @@ Sol.tty is an easy way to script multiple transaction calls together and send th
 
 Ideal for saving gas by batching transactions together, writing one-off scripts and codifying specific transaction behavior in a reusable format.
 
-<a href="https://raw.githubusercontent.com/Tenderly/sol.tty/master/images/ss.png" target="_blank">![An example of a snippet](https://raw.githubusercontent.com/Tenderly/sol.tty/master/images/ss.png)</a>
+<a href="https://raw.githubusercontent.com/Tenderly/sol.tty/master/images/sss.png" target="_blank">![An example of a snippet](https://raw.githubusercontent.com/Tenderly/sol.tty/master/images/sss.png)</a>
 
 ## How we built it
 There are a couple of steps involved in making this:
