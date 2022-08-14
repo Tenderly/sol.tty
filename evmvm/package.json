@@ -3,7 +3,7 @@
     "test": "truffle test ./test/eval.js"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^2.3.0",
+    "@openzeppelin/contracts": "^4.7.2",
     "truffle-hdwallet-provider": "^1.0.0-web3one.5"
   }
 }
